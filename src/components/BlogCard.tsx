@@ -8,6 +8,11 @@ interface BlogCardProps {
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ blog, onDelete }) => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onDelete(blog.id);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       {blog.image_url && (
@@ -15,6 +20,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onDelete }) => {
           src={blog.image_url}
           alt={blog.title}
           className="w-full h-48 object-cover"
+          loading="lazy"
         />
       )}
       <div className="p-6">
@@ -23,7 +29,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onDelete }) => {
         </h2>
         <p className="text-gray-600 mb-2">{blog.location}</p>
         <p className="text-gray-600 mb-4">
-          {blog.content.substring(0, 150)}...
+          {blog.content.length > 150
+            ? `${blog.content.substring(0, 150)}...`
+            : blog.content}
         </p>
         <div className="flex justify-between items-center">
           <Link
@@ -33,8 +41,9 @@ const BlogCard: React.FC<BlogCardProps> = ({ blog, onDelete }) => {
             Read more →
           </Link>
           <button
-            onClick={() => onDelete(blog.id)}
+            onClick={handleDelete}
             className="text-red-500 hover:text-red-600"
+            type="button"
           >
             Delete
           </button>
